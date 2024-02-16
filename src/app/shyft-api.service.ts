@@ -7,7 +7,7 @@ export class ShyftApiService{
 
     private readonly _httpClient: HttpClient = inject(HttpClient);
     private readonly _headers: { 'x-api-key': string} = { 'x-api-key':'WsN4yRSAahFYmfCH' };
-    private readonly _mint = '7EYnhQoR9YM3N7UoaKRoA44Uy8JeaZV3qyouov87awMs';
+    private readonly _mint = 'GbUgVowvpuXxQnw3UEfa9JCc9HgBfaxJGGwKJbMmCpGC';
 
 
     getAccount(publicKey: string | undefined | null){
@@ -15,14 +15,15 @@ export class ShyftApiService{
             return of(null);
         }
 
-        const url = new URL('https://api.shyft.to/sol/v1/wallet/token_balance');
+        const url = new URL('https://api.shyft.to/sol/v1/wallet/all_tokens');
         url.searchParams.set('network', 'mainnet-beta');
         url.searchParams.set('wallet',publicKey)
         url.searchParams.set('token',this._mint)
-
-        return this._httpClient.get<{result: {balance: number; info: {image: string}}}>(
+        let resultCoins = this._httpClient.get<{result: {balance: number; info: {image: string}}}>(
             url.toString(),
             {headers: this._headers}
         ).pipe(map(({result}) => result))
+        console.log(resultCoins)
+        return resultCoins
     }
 }
